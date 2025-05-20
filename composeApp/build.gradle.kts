@@ -58,7 +58,15 @@ kotlin {
         
         androidMain.dependencies {
             implementation(compose.preview)
+            implementation(libs.kotlin.test)
             implementation(libs.androidx.activity.compose)
+        }
+        androidInstrumentedTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.androidx.testExt.junit)
+            implementation(libs.androidx.test.core)
+            implementation(libs.androidx.test.rules)
+            implementation(libs.androidx.espresso.core)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

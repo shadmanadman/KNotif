@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.10.0"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
@@ -13,12 +13,15 @@ androidx-testExt = "1.2.1"
 composeHotReload = "1.0.0-alpha09"
 composeMultiplatform = "1.8.0"
 junit = "4.13.2"
+core = "1.6.1"
 kotlin = "2.1.21"
 kotlinx-coroutines = "1.10.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "core" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "core" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
