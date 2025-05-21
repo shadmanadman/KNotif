@@ -39,6 +39,7 @@ class AndroidNotificationHandlerTest : TestCase() {
             message = "This is a test message",
             senderName = "",
             timestamp = null,
+            appIcon = "",
             style = KNotifStyle(
                 backgroundColor = "#FF6200EE"
             )

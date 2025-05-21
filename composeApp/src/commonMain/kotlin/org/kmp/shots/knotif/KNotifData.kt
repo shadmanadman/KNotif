@@ -1,5 +1,6 @@
 package org.kmp.shots.knotif
 
+import androidx.compose.ui.graphics.ImageBitmap
 import org.jetbrains.compose.resources.DrawableResource
 
 /**
@@ -14,7 +15,7 @@ sealed class KNotifData{
     abstract val id: String
     abstract val title: String
     abstract val style :KNotifStyle
-    abstract val appIcon: String
+    abstract val appIcon: ImageBitmap
     open val position: NotificationPosition = NotificationPosition.BottomCenter
 }
 
@@ -30,7 +31,7 @@ enum class NotificationPosition {
 data class KNotifMessageData(
     override val id: String,
     override val title: String,
-    override val appIcon: String,
+    override val appIcon: ImageBitmap,
     val message: String,
     val senderName: String?,
     val timestamp: Long?,
@@ -41,7 +42,7 @@ data class KNotifMessageData(
 data class KNotifMusicData(
     override val id: String,
     override val title: String,
-    override val appIcon: String,
+    override val appIcon: ImageBitmap,
     val artist: String,
     val isPlaying: Boolean,
     val onPlayPause: (() -> Unit)? = null,
@@ -71,7 +72,7 @@ data class MusicIcons(
 data class KNotifProgressData(
     override val id: String,
     override val title: String,
-    override val appIcon: String,
+    override val appIcon: ImageBitmap,
     val progress: Int,
     val indeterminate: Boolean = false,
     val description: String? = null,
