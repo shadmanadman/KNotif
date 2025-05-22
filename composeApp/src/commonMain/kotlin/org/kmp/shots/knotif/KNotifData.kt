@@ -15,7 +15,8 @@ sealed class KNotifData{
     abstract val id: String
     abstract val title: String
     abstract val style :KNotifStyle
-    abstract val appIcon: ImageBitmap
+    abstract val appIcon: ImageBitmap?
+    abstract val appName: String
     open val position: NotificationPosition = NotificationPosition.BottomCenter
 }
 
@@ -31,10 +32,12 @@ enum class NotificationPosition {
 data class KNotifMessageData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap,
+    override val appIcon: ImageBitmap?,
+    override val appName: String,
     val message: String,
     val senderName: String?,
     val timestamp: Long?,
+    val poster: ImageBitmap?,
     override val style: KNotifStyle = KNotifStyle.Default,
     override val position: NotificationPosition = NotificationPosition.BottomCenter
 ) : KNotifData()
@@ -42,7 +45,8 @@ data class KNotifMessageData(
 data class KNotifMusicData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap,
+    override val appIcon: ImageBitmap?,
+    override val appName: String,
     val artist: String,
     val isPlaying: Boolean,
     val onPlayPause: (() -> Unit)? = null,
@@ -54,25 +58,22 @@ data class KNotifMusicData(
 ) : KNotifData()
 
 data class MusicIcons(
-    val playIcon: String,
-    val pauseIcon: String,
-    val nextIcon: String,
-    val previousIcon: String
+    val playIcon: ImageBitmap? = null,
+    val pauseIcon: ImageBitmap?= null,
+    val nextIcon: ImageBitmap?= null,
+    val previousIcon: ImageBitmap?= null,
+    val poster: ImageBitmap?= null
 ) {
     companion object {
-        val Default = MusicIcons(
-            playIcon = "ic_play",
-            pauseIcon = "ic_pause",
-            nextIcon = "ic_next",
-            previousIcon = "ic_previous"
-        )
+        val Default = MusicIcons()
     }
 }
 
 data class KNotifProgressData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap,
+    override val appIcon: ImageBitmap?,
+    override val appName: String,
     val progress: Int,
     val indeterminate: Boolean = false,
     val description: String? = null,

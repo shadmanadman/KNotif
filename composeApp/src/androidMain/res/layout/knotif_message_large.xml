@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/knotif_title"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:textColor="#000000" />
+
+
+    <TextView
+        android:id="@+id/knotif_message"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#444444"
+        android:textSize="14sp" />
+
+
+    <ImageView
+        android:id="@+id/knotif_poster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/notification_icon"/>
+</LinearLayout>
