@@ -17,21 +17,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             App()
-
-            val message = KNotifMessageData(
-                id = "test_notification_1",
-                title = "Test Title",
-                message = "This is a test message",
-                senderName = "",
-                timestamp = null,
-                appName = "Test App 34",
-                appIcon = ContextCompat.getDrawable(LocalContext.current, R.drawable.ic_launcher_foreground)
-                    ?.toBitmap()?.asImageBitmap(),
-                style = KNotifStyle(
-                    backgroundColor = "#FF6200EE"
-                )
-            )
-            AndroidNotificationHandler.show(message)
         }
     }
 }

@@ -49,9 +49,6 @@ data class KNotifMusicData(
     override val appName: String,
     val artist: String,
     val isPlaying: Boolean,
-    val onPlayPause: (() -> Unit)? = null,
-    val onNext: (() -> Unit)? = null,
-    val onPrevious: (() -> Unit)? = null,
     val icons: MusicIcons = MusicIcons.Default,
     override val style: KNotifStyle = KNotifStyle.Default,
     override val position: NotificationPosition= NotificationPosition.BottomCenter

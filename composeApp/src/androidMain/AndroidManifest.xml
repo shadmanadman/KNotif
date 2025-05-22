@@ -18,6 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".KnotifReceiver"
+            android:enabled="true"
+            android:exported="false"> <intent-filter>
+            <action android:name="knotif.ACTION_PREVIOUS" />
+            <action android:name="knotif.ACTION_NEXT" />
+            <action android:name="knotif.ACTION_PLAY_PAUSE" />
+            <action android:name="knotif.ACTION_NOTIFICATION_CLICK" />
+        </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

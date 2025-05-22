@@ -2,16 +2,22 @@ package org.kmp.shots.knotif
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import org.kmp.shots.knotif.AndroidNotificationHandler.context
 
 private const val NOTIFICATION_CHANNEL_ID = "knotif"
 private const val NOTIFICATION_CHANNEL_NAME = "KNotif"
+
+const val ACTION_PREVIOUS = "knotif.ACTION_PREVIOUS"
+const val ACTION_NEXT = "knotif.ACTION_NEXT"
+const val ACTION_PLAY_PAUSE = "knotif.ACTION_PLAY_PAUSE"
+const val ACTION_NOTIFICATION_CLICK = "knotif.ACTION_NOTIFICATION_CLICK"
 
 internal object AndroidNotificationHandler {
 
@@ -31,6 +37,8 @@ internal object AndroidNotificationHandler {
     private var onNextClicked: (() -> Unit)? = null
     private var onPrevClicked: (() -> Unit)? = null
 
+    private val notificationDataCache = mutableMapOf<String, KNotifData>()
+
     init {
         createNotificationChannel()
     }
@@ -49,6 +57,7 @@ internal object AndroidNotificationHandler {
 
 
     fun show(notification: KNotifData) {
+        notificationDataCache[notification.id] = notification
         var builder = when (notification) {
             is KNotifMessageData -> buildMessageNotification(notification)
             is KNotifMusicData -> buildMusicNotification(notification)
@@ -74,45 +83,71 @@ internal object AndroidNotificationHandler {
             .setAutoCancel(true)
     }
 
+    fun getNotificationData(id: String): KNotifData? = notificationDataCache[id]
+
+
     private fun applyCallbacks(
         notification: KNotifData,
         builder: NotificationCompat.Builder
     ): NotificationCompat.Builder {
         when (notification) {
-            is KNotifMessageData -> onBuildMessageNotification?.invoke(notification)
+            is KNotifMessageData -> handleMessageClicked(notification)
             is KNotifMusicData -> {
-                onBuildMusicNotification?.invoke(notification)
-                onPlayPauseClicked?.invoke()
-                onNextClicked?.invoke()
-                onPrevClicked?.invoke()
+                handleMusicClicked(notification)
+                handlePlayPauseClicked()
+                handleNextClicked()
+                handlePrevClicked()
             }
 
-            is KNotifProgressData -> onBuildProgressNotification?.invoke(notification)
+            is KNotifProgressData -> handleProgressClicked(notification)
         }
         return builder
     }
 
-
-    fun setOnBuildMessageNotification(
-        onKnotifClicked: (KNotifMessageData) -> Unit
-    ) {
-        onBuildMessageNotification = onKnotifClicked
+    fun handlePlayPauseClicked() {
+        onPlayPauseClicked?.invoke()
     }
 
-    fun setOnBuildMusicNotification(
-        onKnotifClicked: (KNotifMusicData) -> Unit,
+    fun handleNextClicked() {
+        onNextClicked?.invoke()
+    }
+
+    fun handlePrevClicked() {
+        onPrevClicked?.invoke()
+    }
+
+    fun handleMessageClicked(notification: KNotifMessageData) {
+        onBuildMessageNotification?.invoke(notification)
+    }
+
+    fun handleMusicClicked(notification: KNotifMusicData) {
+        onBuildMusicNotification?.invoke(notification)
+    }
+
+    fun handleProgressClicked(notification: KNotifProgressData) {
+        onBuildProgressNotification?.invoke(notification)
+    }
+
+    fun setOnBuildMessageKnotifListener(
+        knotifClicked: (KNotifMessageData) -> Unit
+    ) {
+        onBuildMessageNotification = knotifClicked
+    }
+
+    fun setOnBuildMusicKnotifListener(
+        knotifClicked: (KNotifMusicData) -> Unit,
         playPauseClicked: () -> Unit,
         nextClicked: () -> Unit,
         previousClicked: () -> Unit
     ) {
-        onBuildMusicNotification = onKnotifClicked
+        onBuildMusicNotification = knotifClicked
         onPlayPauseClicked = playPauseClicked
         onNextClicked = nextClicked
         onPrevClicked = previousClicked
     }
 
-    fun setOnBuildProgressNotification(onKnotifClicked: (KNotifProgressData) -> Unit) {
-        onBuildProgressNotification = onKnotifClicked
+    fun setOnBuildProgressKnotifListener(knotifClicked: (KNotifProgressData) -> Unit) {
+        onBuildProgressNotification = knotifClicked
     }
 
 
@@ -135,7 +170,8 @@ internal object AndroidNotificationHandler {
 
     private fun buildProgressNotification(data: KNotifProgressData): NotificationCompat.Builder =
         buildBaseBuilder()
-            .setCustomContentView(progressNotificationView(context, data))
+            .setCustomContentView(progressNotificationSmallView(context, data))
+            .setCustomBigContentView(progressNotificationLargeView(context, data))
             .apply {
                 data.appIcon?.let { setLargeIcon(it.asAndroidBitmap()) }
             }
@@ -157,6 +193,43 @@ private fun musicNotificationSmallView(context: Context, data: KNotifMusicData):
                 if (data.isPlaying) data.icons.pauseIcon else data.icons.playIcon
             setImageViewBitmap(R.id.knotif_play_pause, playPauseIcon?.asAndroidBitmap())
         }
+
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.music_small_layout,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NOTIFICATION_CLICK,
+                actionRequestCode = 2,
+                notifId = data.id
+            )
+        )
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.knotif_prev,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_PREVIOUS,
+                actionRequestCode = 3,
+                notifId = data.id
+            )
+        )
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.knotif_next,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NEXT,
+                actionRequestCode = 4,
+                notifId = data.id
+            )
+        )
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.knotif_play_pause,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_PLAY_PAUSE,
+                actionRequestCode = 5,
+                notifId = data.id
+            )
+        )
     }
 }
 
@@ -183,6 +256,44 @@ private fun musicNotificationLargeView(context: Context, data: KNotifMusicData):
                 if (data.isPlaying) data.icons.pauseIcon else data.icons.playIcon
             setImageViewBitmap(R.id.knotif_play_pause, playPauseIcon?.asAndroidBitmap())
         }
+
+        // Set pending intents
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.music_large_layout,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NOTIFICATION_CLICK,
+                actionRequestCode = 2,
+                notifId = data.id
+            )
+        )
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.knotif_prev,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_PREVIOUS,
+                actionRequestCode = 3,
+                notifId = data.id
+            )
+        )
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.knotif_next,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NEXT,
+                actionRequestCode = 4,
+                notifId = data.id
+            )
+        )
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.knotif_play_pause,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_PLAY_PAUSE,
+                actionRequestCode = 5,
+                notifId = data.id
+            )
+        )
     }
 }
 
@@ -190,6 +301,15 @@ private fun musicNotificationLargeView(context: Context, data: KNotifMusicData):
 private fun messageNotificationSmallView(context: Context, data: KNotifMessageData): RemoteViews {
     return RemoteViews(context.packageName, R.layout.knotif_message_small).apply {
         setTextViewText(R.id.knotif_title, data.title)
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.message_small_layout,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NOTIFICATION_CLICK,
+                actionRequestCode = 1,
+                notifId = data.id
+            )
+        )
     }
 }
 
@@ -199,12 +319,66 @@ private fun messageNotificationLargeView(context: Context, data: KNotifMessageDa
         data.poster?.let { setImageViewBitmap(R.id.knotif_poster, it.asAndroidBitmap()) }
         setTextViewText(R.id.knotif_title, data.title)
         setTextViewText(R.id.knotif_message, data.message)
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.message_large_layout,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NOTIFICATION_CLICK,
+                actionRequestCode = 1,
+                notifId = data.id
+            )
+        )
     }
 }
 
-private fun progressNotificationView(context: Context, data: KNotifProgressData): RemoteViews {
+private fun progressNotificationSmallView(context: Context, data: KNotifProgressData): RemoteViews {
     return RemoteViews(context.packageName, R.layout.knotif_progress_small).apply {
         setTextViewText(R.id.knotif_progress_title, data.title)
         setProgressBar(R.id.knotif_progress_bar, 100, data.progress, false)
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.progress_small_layout,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NOTIFICATION_CLICK,
+                actionRequestCode = 0,
+                notifId = data.id
+            )
+        )
     }
+}
+
+private fun progressNotificationLargeView(context: Context, data: KNotifProgressData): RemoteViews {
+    return RemoteViews(context.packageName, R.layout.knotif_progress_large).apply {
+        setTextViewText(R.id.knotif_progress_title, data.title)
+        setTextViewText(R.id.knotif_progress_description, data.description)
+        setProgressBar(R.id.knotif_progress_bar, 100, data.progress, data.indeterminate)
+        setOnClickPendingIntent(
+            /* viewId = */ R.id.progress_large_layout,
+            /* pendingIntent = */ getPendingIntent(
+                context = context,
+                actionName = ACTION_NOTIFICATION_CLICK,
+                actionRequestCode = 0,
+                notifId = data.id
+            )
+        )
+    }
+}
+
+
+private fun getPendingIntent(
+    context: Context,
+    actionName: String,
+    actionRequestCode: Int,
+    notifId: String
+): PendingIntent {
+    val intent = Intent(context, KnotifReceiver::class.java).apply {
+        action = actionName
+        putExtra(NOTIF_ID, notifId)
+    }
+    return PendingIntent.getBroadcast(
+        context,
+        actionRequestCode,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
 }
