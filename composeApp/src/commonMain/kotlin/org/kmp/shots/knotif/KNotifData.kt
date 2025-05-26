@@ -80,9 +80,6 @@ data class KNotifProgressData(
 
 data class KNotifStyle(
     val backgroundColor: String = "#FFFFFF",
-    val contentColor: String = "#000000",
-    val cornerRadius: Float = 8f,
-    val iconTint: String = "#000000"
 ) {
     companion object {
         val Default = KNotifStyle()
