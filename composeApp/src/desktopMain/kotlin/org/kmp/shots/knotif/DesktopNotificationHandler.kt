@@ -11,27 +11,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowScope
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import java.awt.Color
 import java.awt.SystemTray
 import java.awt.Toolkit
 import java.awt.TrayIcon
 import java.awt.TrayIcon.MessageType
-import java.awt.geom.RoundRectangle2D
 
 object DesktopNotificationHandler {
 
@@ -183,12 +177,3 @@ fun Boolean.getPlayIcon(data: KNotifMusicData): ImageBitmap? {
         data.icons.pauseIcon
 }
 
-fun String.colorFromHex(): androidx.compose.ui.graphics.Color {
-    val cleanHex = this.removePrefix("#")
-    val colorLong = cleanHex.toLong(16)
-    return when (cleanHex.length) {
-        6 -> androidx.compose.ui.graphics.Color((0xFF shl 24) or colorLong.toInt())
-        8 -> androidx.compose.ui.graphics.Color(colorLong.toInt())
-        else -> throw IllegalArgumentException("Invalid hex color: $this")
-    }
-}

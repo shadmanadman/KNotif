@@ -37,7 +37,7 @@ data class KNotifMessageData(
     val message: String,
     val senderName: String?,
     val timestamp: Long?,
-    val poster: ImageBitmap?,
+    val poster: ImageBitmap? = null,
     override val style: KNotifStyle = KNotifStyle.Default,
     override val position: NotificationPosition = NotificationPosition.BottomCenter
 ) : KNotifData()
