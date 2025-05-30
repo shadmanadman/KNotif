@@ -38,8 +38,11 @@ object DesktopNotificationHandler {
     private var onPrevClicked: (() -> Unit)? = null
 
     fun showSystemMessageNotification(data: KNotifMessageData) {
-        if (!SystemTray.isSupported()) return
-        if (isMacOS()) showMacOSNotification(data.title, data.message)
+        if (SystemTray.isSupported().not()) return
+        if (isMacOS()) {
+            showMacOSNotification(data.title, data.message)
+            return
+        }
 
         val tray = SystemTray.getSystemTray()
         val image = Toolkit.getDefaultToolkit().createImage("icon.png")
@@ -165,6 +168,29 @@ object DesktopNotificationHandler {
                 }
             }
         }
+    }
+
+
+    fun setOnBuildMessageKnotifListener(
+        knotifClicked: (KNotifMessageData) -> Unit
+    ) {
+        onBuildMessageNotification = knotifClicked
+    }
+
+    fun setOnBuildMusicKnotifListener(
+        knotifClicked: (KNotifMusicData) -> Unit,
+        playPauseClicked: () -> Unit,
+        nextClicked: () -> Unit,
+        previousClicked: () -> Unit
+    ) {
+        onBuildMusicNotification = knotifClicked
+        onPlayPauseClicked = playPauseClicked
+        onNextClicked = nextClicked
+        onPrevClicked = previousClicked
+    }
+
+    fun setOnBuildProgressKnotifListener(knotifClicked: (KNotifProgressData) -> Unit) {
+        onBuildProgressNotification = knotifClicked
     }
 }
 

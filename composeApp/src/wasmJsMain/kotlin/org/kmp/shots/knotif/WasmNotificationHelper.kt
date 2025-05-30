@@ -161,6 +161,28 @@ internal object WasmNotificationHelper {
 
 
     }
+
+    fun setOnBuildMessageKnotifListener(
+        knotifClicked: (KNotifMessageData) -> Unit
+    ) {
+        onBuildMessageNotification = knotifClicked
+    }
+
+    fun setOnBuildMusicKnotifListener(
+        knotifClicked: (KNotifMusicData) -> Unit,
+        playPauseClicked: () -> Unit,
+        nextClicked: () -> Unit,
+        previousClicked: () -> Unit
+    ) {
+        onBuildMusicNotification = knotifClicked
+        onPlayPauseClicked = playPauseClicked
+        onNextClicked = nextClicked
+        onPrevClicked = previousClicked
+    }
+
+    fun setOnBuildProgressKnotifListener(knotifClicked: (KNotifProgressData) -> Unit) {
+        onBuildProgressNotification = knotifClicked
+    }
 }
 
 
