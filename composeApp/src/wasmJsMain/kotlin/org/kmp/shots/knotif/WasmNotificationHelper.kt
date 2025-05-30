@@ -29,7 +29,7 @@ import org.w3c.notifications.Notification
 import org.w3c.notifications.NotificationOptions
 import org.w3c.notifications.NotificationPermission
 
-object NotificationOverlayController {
+internal object NotificationOverlayController {
     private val _activeOverlay = mutableStateOf<@Composable (() -> Unit)?>(null)
     val activeOverlay: State<(@Composable () -> Unit)?> = _activeOverlay
 
@@ -42,7 +42,7 @@ object NotificationOverlayController {
     }
 }
 
-object WasmNotificationHelper {
+internal object WasmNotificationHelper {
     private var onBuildMessageNotification: ((KNotifMessageData) -> Unit)? = null
     private var onBuildMusicNotification: ((KNotifMusicData) -> Unit)? = null
     private var onBuildProgressNotification: ((KNotifProgressData) -> Unit)? = null
