@@ -5,7 +5,7 @@ internal interface NotificationController{
     fun dismissAll()
 }
 
-internal expect class NotificationService: NotificationController {
+internal expect class NotificationService(): NotificationController {
     override fun show(notification: KNotifData)
     override fun dismiss(notificationId: String)
     override fun dismissAll()

@@ -5,11 +5,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.Image
 import android.os.Build
 import android.widget.RemoteViews
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.IconCompat
 
 private const val NOTIFICATION_CHANNEL_ID = "knotif"
 private const val NOTIFICATION_CHANNEL_NAME = "KNotif"
@@ -77,10 +80,14 @@ internal object AndroidNotificationHandler {
         notificationManager.cancelAll()
     }
 
-    private fun buildBaseBuilder(): NotificationCompat.Builder {
+    private fun buildBaseBuilder(appIcon: ImageBitmap?): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setAutoCancel(true)
+            .setAutoCancel(true).apply {
+                appIcon?.let {
+                    setSmallIcon(appIcon.toIconCompat())
+                    setLargeIcon(appIcon.asAndroidBitmap())
+                }
+            }
     }
 
     fun getNotificationData(id: String): KNotifData? = notificationDataCache[id]
@@ -152,29 +159,20 @@ internal object AndroidNotificationHandler {
 
 
     private fun buildMessageNotification(data: KNotifMessageData): NotificationCompat.Builder =
-        buildBaseBuilder()
+        buildBaseBuilder(data.appIcon)
             .setCustomContentView(messageNotificationSmallView(context, data))
             .setCustomBigContentView(messageNotificationLargeView(context, data))
-            .apply {
-                data.appIcon?.let { setLargeIcon(it.asAndroidBitmap()) }
-            }
 
     private fun buildMusicNotification(data: KNotifMusicData): NotificationCompat.Builder =
-        buildBaseBuilder()
+        buildBaseBuilder(data.appIcon)
             .setCustomContentView(musicNotificationSmallView(context, data))
             .setCustomBigContentView(musicNotificationLargeView(context, data))
-            .apply {
-                data.appIcon?.let { setLargeIcon(it.asAndroidBitmap()) }
-            }
 
 
     private fun buildProgressNotification(data: KNotifProgressData): NotificationCompat.Builder =
-        buildBaseBuilder()
+        buildBaseBuilder(data.appIcon)
             .setCustomContentView(progressNotificationSmallView(context, data))
             .setCustomBigContentView(progressNotificationLargeView(context, data))
-            .apply {
-                data.appIcon?.let { setLargeIcon(it.asAndroidBitmap()) }
-            }
 }
 
 private fun musicNotificationSmallView(context: Context, data: KNotifMusicData): RemoteViews {
@@ -381,4 +379,8 @@ private fun getPendingIntent(
         intent,
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
+}
+
+private fun ImageBitmap.toIconCompat(): IconCompat {
+    return IconCompat.createWithBitmap(this.asAndroidBitmap())
 }

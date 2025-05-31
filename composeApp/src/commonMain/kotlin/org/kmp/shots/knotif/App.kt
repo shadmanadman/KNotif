@@ -12,21 +12,36 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import androidx.compose.ui.graphics.ImageBitmap
+import knotif.composeapp.generated.resources.Knotif
+import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import knotif.composeapp.generated.resources.Res
 import knotif.composeapp.generated.resources.compose_multiplatform
+import knotif.composeapp.generated.resources.default_poster
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-
+        testMessageKnotif(
+            imageResource(Res.drawable.default_poster),
+            imageResource(Res.drawable.Knotif)
+        )
     }
 }
 
-
-private fun testNotif(){
-
+private fun testMessageKnotif(poster: ImageBitmap, appIcon: ImageBitmap) {
+    val messageData = KNotifMessageData(
+        id = "1",
+        title = "This is a test",
+        appName = "Kntif",
+        message = "This is a test message",
+        poster = poster,
+        senderName = "",
+        appIcon = appIcon,
+        timestamp = 0L
+    )
+    Knotif.show(messageData)
 }
