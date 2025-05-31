@@ -60,6 +60,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.kotlin.test)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.session)
+            implementation(libs.androidx.media3.ui)
         }
         androidInstrumentedTest.dependencies {
             implementation(libs.kotlin.test)
