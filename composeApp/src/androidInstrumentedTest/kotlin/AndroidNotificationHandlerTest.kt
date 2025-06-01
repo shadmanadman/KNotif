@@ -50,11 +50,9 @@ class AndroidNotificationHandlerTest : TestCase() {
             id = "test_notification_1",
             title = "Test Title",
             message = "This is a test message",
-            senderName = "",
-            timestamp = null,
             appName = "Test App 34",
             appIcon = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
-                ?.toBitmap()?.asImageBitmap(),
+                ?.toBitmap()?.asImageBitmap()!!,
             poster = null,
             style = KNotifStyle(
                 backgroundColor = "#FF6200EE"
@@ -86,7 +84,7 @@ class AndroidNotificationHandlerTest : TestCase() {
             artist = "test",
             isPlaying = false,
             appIcon = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
-                ?.toBitmap()?.asImageBitmap(),
+                ?.toBitmap()?.asImageBitmap()!!,
             style = KNotifStyle(
                 backgroundColor = "#FF6200EE"
             )
@@ -115,7 +113,7 @@ class AndroidNotificationHandlerTest : TestCase() {
             appName = "Test App 34",
             progress = 30,
             appIcon = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
-                ?.toBitmap()?.asImageBitmap(),
+                ?.toBitmap()?.asImageBitmap()!!,
             style = KNotifStyle(
                 backgroundColor = "#FF6200EE"
             )

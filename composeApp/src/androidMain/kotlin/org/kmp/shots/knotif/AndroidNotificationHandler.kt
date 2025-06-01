@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.IconCompat
+import org.jetbrains.compose.resources.DrawableResource
 
 private const val NOTIFICATION_CHANNEL_ID = "knotif"
 private const val NOTIFICATION_CHANNEL_NAME = "KNotif"
@@ -80,10 +81,10 @@ internal object AndroidNotificationHandler {
         notificationManager.cancelAll()
     }
 
-    private fun buildBaseBuilder(appIcon: ImageBitmap?): NotificationCompat.Builder {
+    private fun buildBaseBuilder(appIcon: ImageBitmap): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setAutoCancel(true).apply {
-                appIcon?.let {
+                appIcon.let {
                     setSmallIcon(appIcon.toIconCompat())
                     setLargeIcon(appIcon.asAndroidBitmap())
                 }
@@ -177,20 +178,7 @@ internal object AndroidNotificationHandler {
 
 private fun musicNotificationSmallView(context: Context, data: KNotifMusicData): RemoteViews {
     return RemoteViews(context.packageName, R.layout.knotif_music_small).apply {
-        setTextViewText(R.id.knotif_music_title, data.title)
-        setTextViewText(R.id.knotif_music_artist, data.artist)
-
-        data.icons.previousIcon?.let {
-            setImageViewBitmap(R.id.knotif_prev, it.asAndroidBitmap())
-        }
-        data.icons.nextIcon?.let {
-            setImageViewBitmap(R.id.knotif_next, data.icons.nextIcon.asAndroidBitmap())
-        }
-        data.icons.playIcon.let {
-            val playPauseIcon =
-                if (data.isPlaying) data.icons.pauseIcon else data.icons.playIcon
-            setImageViewBitmap(R.id.knotif_play_pause, playPauseIcon?.asAndroidBitmap())
-        }
+        setTextViewText(R.id.knotif_music_title, "${data.title} by ${data.artist}")
 
         setOnClickPendingIntent(
             /* viewId = */ R.id.music_small_layout,
@@ -201,33 +189,7 @@ private fun musicNotificationSmallView(context: Context, data: KNotifMusicData):
                 notifId = data.id
             )
         )
-        setOnClickPendingIntent(
-            /* viewId = */ R.id.knotif_prev,
-            /* pendingIntent = */ getPendingIntent(
-                context = context,
-                actionName = ACTION_PREVIOUS,
-                actionRequestCode = 3,
-                notifId = data.id
-            )
-        )
-        setOnClickPendingIntent(
-            /* viewId = */ R.id.knotif_next,
-            /* pendingIntent = */ getPendingIntent(
-                context = context,
-                actionName = ACTION_NEXT,
-                actionRequestCode = 4,
-                notifId = data.id
-            )
-        )
-        setOnClickPendingIntent(
-            /* viewId = */ R.id.knotif_play_pause,
-            /* pendingIntent = */ getPendingIntent(
-                context = context,
-                actionName = ACTION_PLAY_PAUSE,
-                actionRequestCode = 5,
-                notifId = data.id
-            )
-        )
+
     }
 }
 
@@ -245,9 +207,10 @@ private fun musicNotificationLargeView(context: Context, data: KNotifMusicData):
 
         data.icons.previousIcon?.let {
             setImageViewBitmap(R.id.knotif_prev, it.asAndroidBitmap())
+
         }
         data.icons.nextIcon?.let {
-            setImageViewBitmap(R.id.knotif_next, data.icons.nextIcon.asAndroidBitmap())
+            setImageViewBitmap(R.id.knotif_next, it.asAndroidBitmap())
         }
         data.icons.playIcon.let {
             val playPauseIcon =
@@ -333,6 +296,7 @@ private fun progressNotificationSmallView(context: Context, data: KNotifProgress
     return RemoteViews(context.packageName, R.layout.knotif_progress_small).apply {
         setTextViewText(R.id.knotif_progress_title, data.title)
         setProgressBar(R.id.knotif_progress_bar, 100, data.progress, false)
+        setTextViewText(R.id.knotif_progress_description, data.description)
         setOnClickPendingIntent(
             /* viewId = */ R.id.progress_small_layout,
             /* pendingIntent = */ getPendingIntent(

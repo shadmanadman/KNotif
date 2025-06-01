@@ -55,25 +55,28 @@
 
         <ImageButton
             android:id="@+id/knotif_prev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="centerCrop"
+            android:layout_margin="34dp"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_previous" />
 
         <ImageButton
             android:id="@+id/knotif_play_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="centerCrop"
+            android:layout_margin="34dp"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_play" />
 
         <ImageButton
             android:id="@+id/knotif_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="centerCrop"
+            android:layout_margin="34dp"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_next" />
     </LinearLayout>

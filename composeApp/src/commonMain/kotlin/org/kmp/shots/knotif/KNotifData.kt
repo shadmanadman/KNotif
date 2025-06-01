@@ -1,7 +1,6 @@
 package org.kmp.shots.knotif
 
 import androidx.compose.ui.graphics.ImageBitmap
-import org.jetbrains.compose.resources.DrawableResource
 
 /**
  * Base class for all types of notifications.
@@ -15,7 +14,7 @@ sealed class KNotifData{
     abstract val id: String
     abstract val title: String
     abstract val style :KNotifStyle
-    abstract val appIcon: ImageBitmap?
+    abstract val appIcon: ImageBitmap
     abstract val appName: String
     open val position: NotificationPosition = NotificationPosition.BottomCenter
 }
@@ -32,20 +31,20 @@ enum class NotificationPosition {
 data class KNotifMessageData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap?,
+    override val appIcon: ImageBitmap,
     override val appName: String,
     val message: String,
-    val senderName: String?,
-    val timestamp: Long?,
     val poster: ImageBitmap? = null,
     override val style: KNotifStyle = KNotifStyle.Default,
     override val position: NotificationPosition = NotificationPosition.BottomCenter
-) : KNotifData()
+) : KNotifData(){
+
+}
 
 data class KNotifMusicData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap?,
+    override val appIcon: ImageBitmap,
     override val appName: String,
     val artist: String,
     val isPlaying: Boolean,
@@ -69,7 +68,7 @@ data class MusicIcons(
 data class KNotifProgressData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap?,
+    override val appIcon: ImageBitmap,
     override val appName: String,
     val progress: Int,
     val indeterminate: Boolean = false,
@@ -78,6 +77,10 @@ data class KNotifProgressData(
     override val position: NotificationPosition= NotificationPosition.BottomCenter
 ) : KNotifData()
 
+/**
+ * Notification style
+ * @property backgroundColor Applicable only on Desktop and Web for [KNotifProgressData] or [KNotifMusicData] type.
+ */
 data class KNotifStyle(
     val backgroundColor: String = "#FFFFFF",
 ) {
