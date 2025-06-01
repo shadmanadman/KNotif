@@ -81,12 +81,15 @@ internal object AndroidNotificationHandler {
         notificationManager.cancelAll()
     }
 
-    private fun buildBaseBuilder(appIcon: ImageBitmap): NotificationCompat.Builder {
+    private fun buildBaseBuilder(appIcon: ImageBitmap?): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setAutoCancel(true).apply {
                 appIcon.let {
-                    setSmallIcon(appIcon.toIconCompat())
-                    setLargeIcon(appIcon.asAndroidBitmap())
+                    appIcon?.let {
+                        setSmallIcon(it.toIconCompat())
+                        setLargeIcon(it.asAndroidBitmap())
+                    }
+
                 }
             }
     }

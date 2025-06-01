@@ -14,7 +14,7 @@ sealed class KNotifData{
     abstract val id: String
     abstract val title: String
     abstract val style :KNotifStyle
-    abstract val appIcon: ImageBitmap
+    abstract val appIcon: ImageBitmap?
     abstract val appName: String
     open val position: NotificationPosition = NotificationPosition.BottomCenter
 }
@@ -31,7 +31,7 @@ enum class NotificationPosition {
 data class KNotifMessageData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap,
+    override val appIcon: ImageBitmap?,
     override val appName: String,
     val message: String,
     val poster: ImageBitmap? = null,
@@ -44,7 +44,7 @@ data class KNotifMessageData(
 data class KNotifMusicData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap,
+    override val appIcon: ImageBitmap?,
     override val appName: String,
     val artist: String,
     val isPlaying: Boolean,
@@ -68,7 +68,7 @@ data class MusicIcons(
 data class KNotifProgressData(
     override val id: String,
     override val title: String,
-    override val appIcon: ImageBitmap,
+    override val appIcon: ImageBitmap?,
     override val appName: String,
     val progress: Int,
     val indeterminate: Boolean = false,

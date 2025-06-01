@@ -28,8 +28,6 @@ class DesktopNotificationHandlerTest {
             id = "msg-1",
             title = "Hello",
             message = "You've got a new message!",
-            senderName = "ChatGPT",
-            timestamp = System.currentTimeMillis(),
             poster = null,
             appName = "TestApp",
             appIcon = null
@@ -69,6 +67,7 @@ class DesktopNotificationHandlerTest {
             title = "Downloading",
             progress = 50,
             appName = "TestDownloader",
+            description = "Downloading file number 2",
             appIcon = null
         )
 

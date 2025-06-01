@@ -4,10 +4,16 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,17 +21,37 @@ import androidx.compose.material.Icon
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.toPixelMap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.ui.zIndex
+import java.awt.Color
+import java.awt.Component
+import java.awt.Image
 import java.awt.SystemTray
 import java.awt.Toolkit
 import java.awt.TrayIcon
 import java.awt.TrayIcon.MessageType
+import java.awt.Window
+import java.awt.image.BufferedImage
+import javax.swing.SwingUtilities
 
 object DesktopNotificationHandler {
 
@@ -48,6 +74,9 @@ object DesktopNotificationHandler {
         val image = Toolkit.getDefaultToolkit().createImage("icon.png")
 
         val trayIcon = TrayIcon(image, data.appName)
+        data.appIcon?.let {
+            trayIcon.image = it.toAwtImage()
+        }
         trayIcon.isImageAutoSize = true
         trayIcon.toolTip = data.appName
 
@@ -57,7 +86,7 @@ object DesktopNotificationHandler {
         try {
             tray.add(trayIcon)
             trayIcon.displayMessage(
-                data.senderName ?: data.title,
+                data.title,
                 data.message,
                 MessageType.INFO
             )
@@ -82,53 +111,86 @@ object DesktopNotificationHandler {
 
 
     @OptIn(ExperimentalFoundationApi::class)
+    @Composable
     fun showMusicNotification(data: KNotifMusicData) {
-        application {
-            Window(
-                title = data.appName,
-                undecorated = true,
-                onCloseRequest = {},
-                transparent = true,
-                state = rememberWindowState(width = 350.dp, height = 180.dp),
-                alwaysOnTop = true
-            ) {
-                MaterialTheme {
+        Window(
+            title = data.appName,
+            undecorated = true,
+            onCloseRequest = {},
+            transparent = true,
+            state = rememberWindowState(
+                width = 360.dp, height = 180.dp, position = WindowPosition(
+                    Alignment.BottomCenter
+                )
+            ),
+            alwaysOnTop = true
+        ) {
+            MaterialTheme {
+                Box(
+                    Modifier.background(
+                        data.style.backgroundColor.colorFromHex(),
+                        RoundedCornerShape(16.dp)
+                    )
+                ) {
+                    // Close Button
+                    Text(
+                        text = "✕",
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .zIndex(2f)
+                            .padding(8.dp)
+                            .clickable {
+                                this@Window.window.dispose()
+                            }
+                    )
                     Row(
-                        modifier = Modifier.background(
-                            data.style.backgroundColor.colorFromHex(),
-                            RoundedCornerShape(16.dp)
-                        ).padding(12.dp)
-                            .clickable(onClick = { onBuildMusicNotification?.invoke(data) })
+                        modifier = Modifier.padding(12.dp)
+                            .clickable(onClick = { onBuildMusicNotification?.invoke(data) }),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         data.icons.poster?.let {
-                            Image(bitmap = data.icons.poster, contentDescription = null)
+                            Box(modifier = Modifier.size(90.dp).clip(RoundedCornerShape(16.dp))) {
+                                Image(
+                                    modifier = Modifier.fillMaxSize(),
+                                    bitmap = data.icons.poster,
+                                    contentScale = ContentScale.Crop,
+                                    contentDescription = null
+                                )
+                            }
                         }
                         Spacer(Modifier.width(8.dp))
                         Column {
                             Text(
-                                modifier = Modifier.padding(top = 8.dp),
                                 text = data.title,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(data.artist, style = MaterialTheme.typography.body1)
-                            Row {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
                                 data.icons.previousIcon?.let {
                                     Icon(
-                                        modifier = Modifier.onClick(onClick = { onPrevClicked?.invoke() }),
+                                        modifier = Modifier.size(24.dp)
+                                            .onClick(onClick = { onPrevClicked?.invoke() }),
                                         bitmap = it,
                                         contentDescription = null
                                     )
                                 }
                                 data.isPlaying.getPlayIcon(data)?.let {
                                     Icon(
-                                        modifier = Modifier.onClick(onClick = { onPlayPauseClicked?.invoke() }),
+                                        modifier = Modifier.size(24.dp)
+                                            .onClick(onClick = { onPlayPauseClicked?.invoke() }),
                                         bitmap = it,
                                         contentDescription = null
                                     )
                                 }
                                 data.icons.nextIcon?.let {
                                     Icon(
-                                        modifier = Modifier.onClick(onClick = { onNextClicked?.invoke() }),
+                                        modifier = Modifier.size(24.dp)
+                                            .onClick(onClick = { onNextClicked?.invoke() }),
                                         bitmap = it,
                                         contentDescription = null
                                     )
@@ -138,36 +200,67 @@ object DesktopNotificationHandler {
                     }
                 }
             }
+
         }
     }
 
+    @Composable
     fun showProgressNotification(data: KNotifProgressData) {
-        application {
-            Window(
-                title = data.appName,
-                undecorated = true,
-                onCloseRequest = {},
-                transparent = true,
-                state = rememberWindowState(width = 300.dp, height = 100.dp),
-                alwaysOnTop = true
-            ) {
-                MaterialTheme {
+        Window(
+            title = data.appName,
+            undecorated = true,
+            onCloseRequest = {},
+            transparent = true,
+            state = rememberWindowState(
+                width = 300.dp,
+                height = 150.dp,
+                position = WindowPosition(alignment = Alignment.BottomCenter)
+            ),
+            alwaysOnTop = true
+        ) {
+
+            MaterialTheme {
+                Box(
+                    Modifier.background(
+                        data.style.backgroundColor.colorFromHex(),
+                        RoundedCornerShape(16.dp)
+                    )
+                ) {
+                    // Close Button
+                    Text(
+                        text = "✕",
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .zIndex(2f)
+                            .padding(8.dp)
+                            .clickable {
+                                this@Window.window.dispose()
+                            }
+                    )
                     Column(
                         Modifier
-                            .background(
-                                data.style.backgroundColor.colorFromHex(),
-                                RoundedCornerShape(16.dp)
-                            )
                             .padding(8.dp)
                             .clickable(onClick = { onBuildProgressNotification?.invoke(data) })
                     ) {
-                        Text(data.title, fontWeight = FontWeight.Bold)
+                        Row {
+                            data.appIcon?.let {
+                                Icon(
+                                    modifier = Modifier.size(24.dp).padding(end = 8.dp),
+                                    bitmap = it,
+                                    contentDescription = null
+                                )
+                            }
+                            Text(data.title, fontWeight = FontWeight.Bold)
+                        }
                         LinearProgressIndicator(progress = data.progress / 100f)
                         Text("${data.progress}%")
+                        Text("${data.description}", style = MaterialTheme.typography.subtitle2)
                     }
                 }
             }
         }
+
     }
 
 
@@ -203,3 +296,22 @@ fun Boolean.getPlayIcon(data: KNotifMusicData): ImageBitmap? {
         data.icons.pauseIcon
 }
 
+fun ImageBitmap.toAwtImage(): Image {
+    val pixelMap = this.toPixelMap()
+    val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            val color = pixelMap[x, y]
+            val awtColor = Color(
+                (color.red * 255).toInt(),
+                (color.green * 255).toInt(),
+                (color.blue * 255).toInt(),
+                (color.alpha * 255).toInt()
+            )
+            bufferedImage.setRGB(x, y, awtColor.rgb)
+        }
+    }
+
+    return bufferedImage
+}

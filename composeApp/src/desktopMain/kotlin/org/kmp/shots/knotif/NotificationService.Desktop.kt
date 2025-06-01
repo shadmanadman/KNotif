@@ -1,17 +1,27 @@
 package org.kmp.shots.knotif
 
+import androidx.compose.runtime.Composable
 
-internal actual class NotificationService : NotificationController{
+
+internal actual class NotificationService : NotificationController {
+    @Composable
     actual override fun show(notification: KNotifData) {
-        TODO("Not yet implemented")
+        when (notification) {
+            is KNotifMessageData -> DesktopNotificationHandler.showSystemMessageNotification(
+                notification
+            )
+
+            is KNotifMusicData -> DesktopNotificationHandler.showMusicNotification(notification)
+            is KNotifProgressData -> DesktopNotificationHandler.showProgressNotification(
+                notification
+            )
+        }
     }
 
     actual override fun dismiss(notificationId: String) {
-        TODO("Not yet implemented")
     }
 
     actual override fun dismissAll() {
-        TODO("Not yet implemented")
     }
 
 }
