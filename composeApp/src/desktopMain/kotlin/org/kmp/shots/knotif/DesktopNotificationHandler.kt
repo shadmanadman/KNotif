@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -134,8 +135,8 @@ object DesktopNotificationHandler {
                 ) {
                     // Close Button
                     Text(
-                        text = "✕",
-                        fontSize = 16.sp,
+                        text = "X",
+                        fontSize = 18.sp,
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .zIndex(2f)
@@ -146,7 +147,10 @@ object DesktopNotificationHandler {
                     )
                     Row(
                         modifier = Modifier.padding(12.dp)
-                            .clickable(onClick = { onBuildMusicNotification?.invoke(data) }),
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { onBuildMusicNotification?.invoke(data) },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         data.icons.poster?.let {
@@ -167,7 +171,7 @@ object DesktopNotificationHandler {
                             )
                             Text(data.artist, style = MaterialTheme.typography.body1)
                             Row(
-                                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                                modifier = Modifier.fillMaxWidth().zIndex(3f).padding(top = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -228,8 +232,8 @@ object DesktopNotificationHandler {
                 ) {
                     // Close Button
                     Text(
-                        text = "✕",
-                        fontSize = 16.sp,
+                        text = "X",
+                        fontSize = 18.sp,
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .zIndex(2f)
@@ -241,7 +245,10 @@ object DesktopNotificationHandler {
                     Column(
                         Modifier
                             .padding(8.dp)
-                            .clickable(onClick = { onBuildProgressNotification?.invoke(data) })
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) { onBuildProgressNotification?.invoke(data) }
                     ) {
                         Row {
                             data.appIcon?.let {

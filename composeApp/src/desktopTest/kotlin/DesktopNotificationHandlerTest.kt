@@ -1,3 +1,4 @@
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createComposeRule
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,8 @@ class DesktopNotificationHandlerTest {
 
 
     @Test
-    fun testMusicNotificationComposeWindow() = runBlocking {
+    @Composable
+    fun testMusicNotificationComposeWindow() {
         val data = KNotifMusicData(
             id = "music-1",
             title = "Now Playing",
@@ -50,18 +52,17 @@ class DesktopNotificationHandlerTest {
             isPlaying = false
         )
 
-        withContext(Dispatchers.Default) {
             DesktopNotificationHandler.showMusicNotification(data)
-        }
 
-        delay(2000)
+
 
         assertTrue(true) // If no exceptions, the flow is correct
     }
 
 
     @Test
-    fun testProgressNotification() = runBlocking {
+    @Composable
+    fun testProgressNotification() {
         val data = KNotifProgressData(
             id = "progress-1",
             title = "Downloading",
@@ -71,12 +72,8 @@ class DesktopNotificationHandlerTest {
             appIcon = null
         )
 
-        withContext(Dispatchers.Default) {
-            DesktopNotificationHandler.showProgressNotification(data)
-        }
 
-        delay(3000)
-
+        DesktopNotificationHandler.showProgressNotification(data)
         assertTrue(true) // If no exceptions, the flow is correct
     }
 }
