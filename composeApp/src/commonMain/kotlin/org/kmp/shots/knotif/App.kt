@@ -19,23 +19,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     MaterialTheme {
-//        testMessageKnotif(
-//            imageResource(Res.drawable.default_poster),
-//            imageResource(Res.drawable.ic_default_app_icon)
-//        )
-
-        //testProgressKnotit(imageResource(Res.drawable.ic_default_app_icon))
-
     }
-
-    testMusicKnotif(
-        imageResource(Res.drawable.default_poster),
-        imageResource(Res.drawable.ic_default_app_icon),
-        imageResource(Res.drawable.ic_default_play),
-        imageResource(Res.drawable.ic_default_pause),
-        imageResource(Res.drawable.ic_default_next),
-        imageResource(Res.drawable.ic_default_prev)
-    )
 }
 
 @Composable
@@ -43,7 +27,7 @@ private fun testMessageKnotif(poster: ImageBitmap, appIcon: ImageBitmap) {
     val messageData = KNotifMessageData(
         id = "1",
         title = "This is a test",
-        appName = "Kntif",
+        appName = "Knotif",
         message = "This is a test message",
         poster = poster,
         appIcon = appIcon,
@@ -63,7 +47,7 @@ private fun testMusicKnotif(
     val messageData = KNotifMusicData(
         id = "1",
         title = "This is a test",
-        appName = "Kntif",
+        appName = "Knotif",
         icons = MusicIcons(
             poster = poster,
             playIcon = playIcon,
@@ -79,12 +63,12 @@ private fun testMusicKnotif(
 }
 
 @Composable
-private fun testProgressKnotit(appIcon: ImageBitmap) {
+private fun testProgressKnotif(appIcon: ImageBitmap) {
     val progressData = KNotifProgressData(
         id = "1",
         title = "This is a test",
         description = "This is a test description",
-        appName = "Kntif",
+        appName = "Knotif",
         progress = 50,
         appIcon = appIcon
     )

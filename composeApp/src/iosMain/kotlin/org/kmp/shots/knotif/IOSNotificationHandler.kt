@@ -88,7 +88,7 @@ internal object IOSNotificationHandler {
     fun showMessageNotification(data: KNotifMessageData) {
         val content = UNMutableNotificationContent().apply {
             setTitle(data.title)
-            setSubtitle(data.senderName ?: data.appName)
+            setSubtitle(data.appName)
             setBody(data.message)
             setCategoryIdentifier(MESSAGE_CATEGORY)
         }
@@ -96,15 +96,16 @@ internal object IOSNotificationHandler {
         data.poster?.let { imageBitmap ->
             val attachmentURL = imageBitmap.saveImageBitmapToFileUrl()
             attachmentURL?.let {
+                println("Attachment URL: $it")
                 val attachment =
                     UNNotificationAttachment.attachmentWithIdentifier("poster", it, null, null)
                 if (attachment != null) {
-                    content.setValue(listOf(attachment), forKey = "attachments")
+                    content.setAttachments(listOf(attachment))
                 }
             }
         }
 
-        val trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(1.0, false)
+        val trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(2.0, false)
 
         val request = UNNotificationRequest.requestWithIdentifier(
             MESSAGE_CATEGORY, content, trigger
@@ -124,7 +125,8 @@ internal object IOSNotificationHandler {
     fun showProgressNotification(data: KNotifProgressData) {
         val content = UNMutableNotificationContent().apply {
             setTitle(data.title)
-            setBody(data.progress.toString())
+            setSubtitle(data.appName)
+            setBody("-----------------${data.progress}%------------------")
             setCategoryIdentifier(PROGRESS_CATEGORY)
         }
 

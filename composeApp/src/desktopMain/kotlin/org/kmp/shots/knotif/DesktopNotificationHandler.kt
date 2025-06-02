@@ -120,7 +120,7 @@ object DesktopNotificationHandler {
             onCloseRequest = {},
             transparent = true,
             state = rememberWindowState(
-                width = 360.dp, height = 180.dp, position = WindowPosition(
+                width = 380.dp, height = 180.dp, position = WindowPosition(
                     Alignment.BottomCenter
                 )
             ),
@@ -137,6 +137,7 @@ object DesktopNotificationHandler {
                     Text(
                         text = "X",
                         fontSize = 18.sp,
+                        color = androidx.compose.ui.graphics.Color.Red,
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .zIndex(2f)
@@ -216,7 +217,7 @@ object DesktopNotificationHandler {
             onCloseRequest = {},
             transparent = true,
             state = rememberWindowState(
-                width = 300.dp,
+                width = 320.dp,
                 height = 150.dp,
                 position = WindowPosition(alignment = Alignment.BottomCenter)
             ),
@@ -234,6 +235,7 @@ object DesktopNotificationHandler {
                     Text(
                         text = "X",
                         fontSize = 18.sp,
+                        color = androidx.compose.ui.graphics.Color.Red,
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .zIndex(2f)
