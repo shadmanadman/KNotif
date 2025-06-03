@@ -11,6 +11,19 @@ internal actual class NotificationService : NotificationController {
             is KNotifMusicData -> WasmNotificationHelper.showMusicNotification(notification)
             is KNotifProgressData -> WasmNotificationHelper.showProgressNotification(notification)
         }
+        WasmNotificationHelper.setOnBuildMusicKnotifListener(
+            knotifClicked = { KNotifListeners.onBuildMusicNotification?.invoke(it) },
+            playPauseClicked = { KNotifListeners.onPlayPauseClicked?.invoke() },
+            nextClicked = { KNotifListeners.onNextClicked?.invoke() },
+            previousClicked = { KNotifListeners.onPrevClicked?.invoke() })
+
+        WasmNotificationHelper.setOnBuildMessageKnotifListener {
+            KNotifListeners.onBuildMessageNotification?.invoke(it)
+        }
+
+        WasmNotificationHelper.setOnBuildProgressKnotifListener {
+            KNotifListeners.onBuildProgressNotification?.invoke(it)
+        }
     }
 
     actual override fun dismiss(notificationId: String) {

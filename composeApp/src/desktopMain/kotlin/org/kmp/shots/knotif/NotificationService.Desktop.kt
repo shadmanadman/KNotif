@@ -16,6 +16,19 @@ internal actual class NotificationService : NotificationController {
                 notification
             )
         }
+        DesktopNotificationHandler.setOnBuildMusicKnotifListener(
+            knotifClicked = { KNotifListeners.onBuildMusicNotification?.invoke(it) },
+            playPauseClicked = { KNotifListeners.onPlayPauseClicked?.invoke() },
+            nextClicked = { KNotifListeners.onNextClicked?.invoke() },
+            previousClicked = { KNotifListeners.onPrevClicked?.invoke() })
+
+        DesktopNotificationHandler.setOnBuildMessageKnotifListener {
+            KNotifListeners.onBuildMessageNotification?.invoke(it)
+        }
+
+        DesktopNotificationHandler.setOnBuildProgressKnotifListener {
+            KNotifListeners.onBuildProgressNotification?.invoke(it)
+        }
     }
 
     actual override fun dismiss(notificationId: String) {
