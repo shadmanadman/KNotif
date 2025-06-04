@@ -1,17 +1,13 @@
 import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
-import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import junit.framework.TestCase
-import org.jetbrains.compose.resources.DrawableResource
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -21,15 +17,13 @@ import org.kmp.shots.knotif.KNotifMessageData
 import org.kmp.shots.knotif.KNotifMusicData
 import org.kmp.shots.knotif.KNotifProgressData
 import org.kmp.shots.knotif.KNotifStyle
-import org.kmp.shots.knotif.MainActivity
 import org.kmp.shots.knotif.R
-import kotlin.jvm.java
 import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class AndroidNotificationHandlerTest : TestCase() {
-    @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+//    @get:Rule
+//    val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @get:Rule
     val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
