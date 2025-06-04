@@ -2,7 +2,7 @@
 [![Gradle](https://img.shields.io/badge/Gradle-8.x-green.svg?style=flat-square&logo=gradle)](https://gradle.org/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-![](screens/Knotif.png)
+![](screens/Knotif.jpg)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -39,7 +39,7 @@ Note: In Android and iOS you need to set your app_icon and app_name inside `Andr
     }
 ```
 #### How it looks
-![](screens/1.png)
+![](screens/1.jpg)
 
 
 ### Music notification
@@ -78,7 +78,7 @@ Note: This notification style for Android and iOS will be replaced with the new 
     playPauseClicked = {})
 ```
 #### How it looks
-![](screens/2.png)
+![](screens/2.jpg)
 
 
 
@@ -109,4 +109,4 @@ val progressData = KNotifProgressData(
 ```
 
 #### How it looks
-![](screens/3.png)
+![](screens/3.jpg)
